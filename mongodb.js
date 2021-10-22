@@ -1,8 +1,14 @@
-const mongodb = require('mongodb');
-const MongoClient = mongodb.MongoClient;
+//Destructuring mongoDB
+const {MongoClient, ObjectId} = require('mongodb');
 
 const connectionURL = 'mongodb://127.0.0.1:27017';
 const databaseName = 'task-manager';
+
+const id = new ObjectId();
+console.log(id.id.length);
+console.log(id.getTimestamp());
+console.log(id.toHexString().length)
+
 
 MongoClient.connect(connectionURL, {useNewUrlParser: true}, (error, client) => {
     if (error) {
@@ -12,42 +18,31 @@ MongoClient.connect(connectionURL, {useNewUrlParser: true}, (error, client) => {
     console.log('Connected to database :D');
     const db = client.db(databaseName);
 
-    // db.collection('users').insertOne({
-    //     name: 'Niranjana',
-    //     age: 20,
-    // }, (error, result) => {
-    //     if (error) {
-    //         return console.log('Unable to insert user.');
-    //     }
-    //     console.log(result.ops);
-    // });
-//     db.collection('users').insertMany([
-//     {
-//         name: 'Niranjana',
-//         age: 21,
-//     }, {
-//         name: 'Adil',
-//         age: 21,
-//     }
-// ], (error, result) => {
-//     if (error) {
-//         return console.log('Unable to insert documents');
-//     }
-//     console.log(result.ops);
-// });
-db.collection('tasks').insertMany([
-    {
-        description: 'Ace the test',
-        completed: true,
-    }, 
-    {
-        description: 'Correct sleeping schedule',
-        completed: false,
-    }
-], (error, result) => {
-    if (error) {
-        return console.log('unable to add tasks!');
-    }
-    console.log(result.ops);
-});
+    db.collection('users').findOne({ name: 'Niranjana'}, (error, user) => {
+        if (error) {
+            return console.log(`User ${name} not found`);
+        }
+        console.log(user);
+    });
+
+    db.collection('users').find({age: 21});
+    
+    //fetch all tasks that are not completed
+    //to array is used to convert the cursor to array and also for callback option.
+    db.collection('tasks').find({completed : false}).toArray((error, task) => {
+        if(error) {
+            return console.log('unable to fetch tasks!');
+        } else if (task.length == 0) {
+            return console.log('All tasks are complete!');
+        }
+        console.log(task);
+    });
+
+    //find the last task by ID.
+    db.collection('tasks').findOne({_id: new ObjectId("61537ba2e37fe8d697f1c18c")}, (error, task) => {
+        if (error) {
+            return console.log('Unable to fetch task!');
+        }
+        console.log(task);
+    })
 });
