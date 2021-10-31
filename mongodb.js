@@ -17,7 +17,8 @@ MongoClient.connect(connectionURL, {useNewUrlParser: true}, (error, client) => {
 
     console.log('Connected to database :D');
     const db = client.db(databaseName);
-
+    
+    //function to find user.
     db.collection('users').findOne({ name: 'Niranjana'}, (error, user) => {
         if (error) {
             return console.log(`User ${name} not found`);
