@@ -31,7 +31,7 @@ MongoClient.connect(connectionURL, {useNewUrlParser: true}, (error, client) => {
     //to array is used to convert the cursor to array and also for callback option.
     db.collection('tasks').find({completed : false}).toArray((error, task) => {
         if(error) {
-            return console.log('unable to fetch tasks!');
+            return console.log('Unable to fetch tasks, try again later. Troubkeshoot to know more.');
         } else if (task.length == 0) {
             return console.log('All tasks are complete!');
         }
